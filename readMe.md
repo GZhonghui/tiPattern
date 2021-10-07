@@ -1,7 +1,13 @@
 # Taichi Pattern
 
+## Run
+```
+The C++ version is ready to run, but it is not Parallel and has no UI, just to verify the algorithm
+The Taichi(Python) version is working in the process
+```
+
 ## The Definition of Taichi Pattern
-| Definition | A Taichi Pattern |
+| Static | Rotating |
 :-:|:-:
 | ![Taichi](readMe/Taichi_Def.png) | ![Taichi](readMe/Taichi.gif) |
 
