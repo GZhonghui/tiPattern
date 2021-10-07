@@ -1,14 +1,16 @@
 import taichi as ti
+import time
 
-ti.init(arch=ti.gpu)
+ti.init(arch=ti.cuda)
 
 Pi = ti.acos(-1.0)
 
-maxRange = 2
+N = 4
+Inv = True
+Ratio = 0.8
 
 n = 640
-Pixels  = ti.Vector.field(3, dtype=ti.f32, shape=(n, n))
-Pointer = ti.Vector.field(2, dtype=ti.f32, shape=())
+Pixels = ti.field(dtype=ti.f32, shape=(n, n))
 
 @ti.func
 def Rotate(V,Angle):
@@ -23,52 +25,55 @@ def inCircle(P,C,R):
   return dx*dx + dy*dy <= R*R
 
 @ti.kernel
-def Paint(t: ti.f32):
+def Paint(sumT: ti.f32):
   for i, j in Pixels:
-    Pixels[i,j] = (0.5, 0.5, 0.5)
-    Rs[i,j] = (n - 1.0) * 0.5
-    Cs[i,j] = ti.Vector([Rs[i,j],Rs[i,j]], dt=ti.f32)
+    Pixels[i,j] = 0.5
+    R = (n - 1.0) * 0.5
+    C = ti.Vector([R,R], dt=ti.f32)
     P = ti.cast(ti.Vector([i,j]), ti.f32)
-    for Layer in ti.static(range(maxRange)):
-      whiteC = Cs[i,j] + Pointer[None] * Rs[i,j] * 0.5
-      blackC = Cs[i,j] - Pointer[None] * Rs[i,j] * 0.5
-      if inCircle(P, whiteC, Rs[i,j] * 0.5):
-        Pixels[i,j] = (1,1,1)
-        Cs[i,j] = whiteC
-        Rs[i,j] = Rs[i,j] * 0.5
-      elif inCircle(P, blackC, Rs[i,j] * 0.5):
-        Pixels[i,j] = (0,0,0)
-        Cs[i,j] = blackC
-        Rs[i,j] = Rs[i,j] * 0.5
-      elif inCircle(P, Cs[i,j], Rs[i,j]):
-        Ahead = Rotate(Pointer[None], Pi * 0.5)
-        Dir = P - Cs[i,j]
-        if Ahead.dot(Dir) > 0:
-          Pixels[i,j]=(0,0,0)
+    for Layer in range(N):
+      T = sumT * (Layer + 1) * (-1 if Inv and Layer % 2 else 1)
+      thisPointer = Rotate(ti.Vector([0.0, -1.0]), T)
+      whiteC = C + thisPointer * R * 0.5
+      blackC = C - thisPointer * R * 0.5
+      if inCircle(P, whiteC, R * 0.5):
+        Pixels[i,j] = 1
+        if inCircle(P, whiteC, R * 0.5 * Ratio):
+          if Layer == N - 1 and (P - whiteC).norm() < R * 0.2:
+            Pixels[i,j] = 0
+          C = whiteC
+          R = R * 0.5 * Ratio
         else:
-          Pixels[i,j]=(1,1,1)
+          break
+      elif inCircle(P, blackC, R * 0.5):
+        Pixels[i,j] = 0
+        if inCircle(P, blackC, R * 0.5 * Ratio):
+          if Layer == N - 1 and (P - blackC).norm() < R * 0.2:
+            Pixels[i,j] = 1
+          C = blackC
+          R = R * 0.5 * Ratio
+        else:
+          break
+      elif inCircle(P, C, R):
+        Ahead = Rotate(thisPointer, Pi * 0.5)
+        Dir = P - C
+        if Ahead.dot(Dir) > 0:
+          Pixels[i,j] = 0
+        else:
+          Pixels[i,j] = 1
         break
       else:
         break
 
-@ti.kernel
-def initTi():
-  Pointer[None] = (0.0, -1.0)
-
 gui = ti.GUI("Taichi", res=(n, n))
 
 def main():
-  initTi()
   try:
-    time_step = 0
-    render_rate = 0.00001
+    startT = time.time()
     while True:
-      Paint(time_step * render_rate)
+      Paint(time.time() - startT)
       gui.set_image(Pixels)
       gui.show()
-
-      time_step += 1
-      
   except RuntimeError:
     pass
 
