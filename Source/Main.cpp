@@ -14,6 +14,10 @@ int N = 4;
 bool Inv = false;
 float Ratio = 0.8;
 
+bool FixedRatio = false;
+
+float Ratios[2] = {0.8f, 0.95f};
+
 struct Vec2
 {
     float x,y;
@@ -41,6 +45,16 @@ inline Vec2 Rotate(const Vec2& V, float Angle)
     return R;
 }
 
+inline float Norm(float x, float l, float r)
+{
+    return (x-l) / (r-l);
+}
+
+inline float Lerp(float x, float l, float r)
+{
+    return l + (r-l) * x;
+}
+
 Point Pointer = {0, -1.0};
 
 bool inCircle(Point P, Point C, float R)
@@ -56,6 +70,7 @@ unsigned char Print(int i, int j, float Time)
     float R = (n - 1.0) * 0.5;
     Point C = {R, R};
     Point P = {(float)i, (float)j};
+    float nowRatio = Lerp(Norm(std::sin(Time),-1,1), Ratios[0], Ratios[1]);
     for(int Layer = 0; Layer < N; Layer += 1)
     {
         auto T = Time * (Layer + 1) * (Inv ? (Layer % 2 ? 1 : -1) : 1);
@@ -73,7 +88,7 @@ unsigned char Print(int i, int j, float Time)
         if(inCircle(P, whiteC, R * 0.5f))
         {
             Res = 255;
-            if(inCircle(P, whiteC, R * 0.5f * Ratio))
+            if(inCircle(P, whiteC, R * 0.5f * (FixedRatio ? Ratio : nowRatio)))
             {
                 if (Layer == N-1)
                 {
@@ -83,7 +98,7 @@ unsigned char Print(int i, int j, float Time)
                     }
                 }
                 C = whiteC;
-                R = R * 0.5f * Ratio;
+                R = R * 0.5f * (FixedRatio ? Ratio : nowRatio);
             }
             else
             {
@@ -93,7 +108,7 @@ unsigned char Print(int i, int j, float Time)
         else if(inCircle(P, blackC, R * 0.5f))
         {
             Res = 0;
-            if(inCircle(P, blackC, R * 0.5f * Ratio))
+            if(inCircle(P, blackC, R * 0.5f * (FixedRatio ? Ratio : nowRatio)))
             {
                 if (Layer == N-1)
                 {
@@ -103,7 +118,7 @@ unsigned char Print(int i, int j, float Time)
                     }
                 }
                 C = blackC;
-                R = R * 0.5f * Ratio;
+                R = R * 0.5f * (FixedRatio ? Ratio : nowRatio);
             }
             else 
             {
