@@ -10,9 +10,6 @@ n = 640
 Pixels  = ti.Vector.field(3, dtype=ti.f32, shape=(n, n))
 Pointer = ti.Vector.field(2, dtype=ti.f32, shape=())
 
-Rs = ti.field(dtype=ti.f32, shape=(n, n))
-Cs = ti.Vector.field(2, dtype=ti.f32, shape=(n, n))
-
 @ti.func
 def Rotate(V,Angle):
   R = ti.Vector([0.0, 0.0], dt=ti.f32)
