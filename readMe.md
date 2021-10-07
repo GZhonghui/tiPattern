@@ -3,7 +3,7 @@
 ## The Definition of Taichi Pattern
 | Definition | A Taichi Pattern |
 :-:|:-:
-| Definition | ![Taichi_Default](readMe/Taichi.gif) |
+| Definition | ![Taichi](readMe/Taichi.gif) |
 
 ## Do Some Change
 ### 1. Add Sub Pattern
