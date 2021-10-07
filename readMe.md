@@ -25,8 +25,8 @@ The C++ version is not parallel or in real time, it's just to verify the algorit
 ### 2. Change Sub Patterns' Size
 | Change Size: 80% | Change Ratio with Time |
 :-:|:-:
-| ![Taichi](readMe/Taichi_N4_R0.8.gif) | ![Taichi](readMe/Taichi_N4_ChangeR.gif) |
+| ![Taichi](readMe/Taichi_N4_R0_8.gif) | ![Taichi](readMe/Taichi_N4_ChangeR.gif) |
 ### 3. Change Sub Patterns' Rotation Direction
 | Rotate in the Opposite Dir | N = 6; Ratio = 1.0 |
 :-:|:-:
-| ![Taichi](readMe/Taichi_N4_R0.8_T.gif) | ![Taichi](readMe/Taichi_N6_R1.0_T.gif) |
+| ![Taichi](readMe/Taichi_N4_R0_8_T.gif) | ![Taichi](readMe/Taichi_N6_R1_0_T.gif) |
