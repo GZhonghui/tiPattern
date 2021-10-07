@@ -10,9 +10,9 @@ const unsigned int n = 640;
 
 const float Pi = std::acos(-1.0);
 
-int N = 1;
+int N = 2;
 bool Inv = false;
-float Radio = 0.8;
+float Radio = 1.0;
 
 struct Vec2
 {
@@ -58,7 +58,7 @@ unsigned char Print(int i, int j, float Time)
     Point P = {(float)i, (float)j};
     for(int Layer = 0; Layer < N; Layer += 1)
     {
-        auto T = Time * (Layer + 1) * (Inv ? (Layer % 2 ? 1 : -1) : 1);
+        auto T = Time;// * (Layer + 1) * (Inv ? (Layer % 2 ? 1 : -1) : 1);
         Vec2 thisPointer = Rotate(Pointer, T);
         Point whiteC =
         {
