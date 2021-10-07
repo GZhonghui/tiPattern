@@ -10,9 +10,9 @@ const unsigned int n = 640;
 
 const float Pi = std::acos(-1.0);
 
-int N = 6;
-bool Inv = true;
-float Radio = 1.0;
+int N = 4;
+bool Inv = false;
+float Radio = 0.8;
 
 struct Vec2
 {
