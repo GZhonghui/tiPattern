@@ -12,7 +12,7 @@ const float Pi = std::acos(-1.0);
 
 int N = 4;
 bool Inv = false;
-float Radio = 0.8;
+float Ratio = 0.8;
 
 struct Vec2
 {
@@ -73,7 +73,7 @@ unsigned char Print(int i, int j, float Time)
         if(inCircle(P, whiteC, R * 0.5f))
         {
             Res = 255;
-            if(inCircle(P, whiteC, R * 0.5f * Radio))
+            if(inCircle(P, whiteC, R * 0.5f * Ratio))
             {
                 if (Layer == N-1)
                 {
@@ -83,7 +83,7 @@ unsigned char Print(int i, int j, float Time)
                     }
                 }
                 C = whiteC;
-                R = R * 0.5f * Radio;
+                R = R * 0.5f * Ratio;
             }
             else
             {
@@ -93,7 +93,7 @@ unsigned char Print(int i, int j, float Time)
         else if(inCircle(P, blackC, R * 0.5f))
         {
             Res = 0;
-            if(inCircle(P, blackC, R * 0.5f * Radio))
+            if(inCircle(P, blackC, R * 0.5f * Ratio))
             {
                 if (Layer == N-1)
                 {
@@ -103,7 +103,7 @@ unsigned char Print(int i, int j, float Time)
                     }
                 }
                 C = blackC;
-                R = R * 0.5f * Radio;
+                R = R * 0.5f * Ratio;
             }
             else 
             {
